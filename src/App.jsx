@@ -1,9 +1,17 @@
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {StockOverviewPage} from './pages/StockOverviewPage';
+import { StockDetailPage } from './pages/StockDetailPage';
+import './App.css';
 
 export default function App() {
   return (
-    <main>
-      <h1 className='mt-5'>Hello</h1>
+    <main className='container'>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<StockOverviewPage />} />
+          <Route path="/detail/:symbol" element={<StockDetailPage />} />
+        </Routes>
+      </BrowserRouter>
     </main>
   )
 }
