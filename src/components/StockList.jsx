@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import finnHub from '../apis/finnHub';
-import { BiDownArrow, BiUpArrow } from 'react-icons/bi'
+import { BiDownArrow, BiUpArrow } from 'react-icons/bi';
+import { useWatchList } from '../context/watchListContext'
 
 export const StockList = () => {
   const [ stock, setStock ] = useState()
-  const [ watchList, setWatchList ] = useState(["GOOGL", "MSFT", "AMZN"]); 
+  const { watchList } = useWatchList();
 
   const changeColor = (data) => {
     return data > 0 ? "success" : "danger"
@@ -17,7 +18,6 @@ export const StockList = () => {
   useEffect(() => {
     let isMounted = true;
     const fetchData = async () => {
-      
       try {
         const responses = await Promise.all(
           watchList.map(stock => {
@@ -29,14 +29,14 @@ export const StockList = () => {
           })
         );
         
-        console.log(responses);
+        // console.log(responses);
         const data = responses.map(response => {
           return {
             data: response.data,
             symbol: response.config.params.symbol
           }
         });
-        console.log(data);
+        // console.log(data);
         if (isMounted) setStock(data);
       } catch (err) {
         console.log(err);
@@ -45,7 +45,7 @@ export const StockList = () => {
     fetchData();
     
     return () => (isMounted = false)
-  },[]);
+  },[watchList]);
 
   
   return <div>
@@ -69,10 +69,10 @@ export const StockList = () => {
               <th scope="row">{stockData.symbol}</th>
               <td>{stockData.data.c}</td>
               <td className={`text-${changeColor(stockData.data.d)}`}>
-                {stockData.data.d}<span>{changeArrow(stockData.data.d)}</span>
+                {stockData.data.d}{changeArrow(stockData.data.d)}
               </td>
               <td className={`text-${changeColor(stockData.data.dp)}`}>
-                {stockData.data.dp}<span>{changeArrow(stockData.data.dp)}</span>
+                {stockData.data.dp}{changeArrow(stockData.data.dp)}
               </td>
               <td>{stockData.data.h}</td>
               <td>{stockData.data.l}</td>
