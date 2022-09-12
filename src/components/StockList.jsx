@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import finnHub from '../apis/finnHub';
+import { BiDownArrow, BiUpArrow } from 'react-icons/bi'
 
 export const StockList = () => {
   const [ stock, setStock ] = useState()
@@ -7,6 +8,10 @@ export const StockList = () => {
 
   const changeColor = (data) => {
     return data > 0 ? "success" : "danger"
+  }
+
+  const changeArrow = (data) => {
+    return data > 0 ? <BiUpArrow /> : <BiDownArrow />
   }
   
   useEffect(() => {
@@ -58,13 +63,17 @@ export const StockList = () => {
         </tr>
       </thead>
       <tbody>
-        {stock.map((stockData) => {
+        {stock && stock.map((stockData) => {
           return (
             <tr className='table-row' key={stockData.symbol}>
               <th scope="row">{stockData.symbol}</th>
               <td>{stockData.data.c}</td>
-              <td className={`text-${changeColor(stockData.data.d)}`}>{stockData.data.d}</td>
-              <td className={`text-${changeColor(stockData.data.dp)}`}>{stockData.data.dp}</td>
+              <td className={`text-${changeColor(stockData.data.d)}`}>
+                {stockData.data.d}<span>{changeArrow(stockData.data.d)}</span>
+              </td>
+              <td className={`text-${changeColor(stockData.data.dp)}`}>
+                {stockData.data.dp}<span>{changeArrow(stockData.data.dp)}</span>
+              </td>
               <td>{stockData.data.h}</td>
               <td>{stockData.data.l}</td>
               <td>{stockData.data.o}</td>
