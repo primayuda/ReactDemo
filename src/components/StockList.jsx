@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import finnHub from '../apis/finnHub';
 import { BiDownArrow, BiUpArrow } from 'react-icons/bi';
 import { useWatchList } from '../context/watchListContext'
@@ -6,6 +7,7 @@ import { useWatchList } from '../context/watchListContext'
 export const StockList = () => {
   const [ stock, setStock ] = useState()
   const { watchList } = useWatchList();
+  const navigate = useNavigate();
 
   const changeColor = (data) => {
     return data > 0 ? "success" : "danger"
@@ -13,6 +15,10 @@ export const StockList = () => {
 
   const changeArrow = (data) => {
     return data > 0 ? <BiUpArrow /> : <BiDownArrow />
+  }
+
+  const handleStockSelect = (symbol) => {
+    navigate(`detail/${symbol}`)
   }
   
   useEffect(() => {
@@ -65,7 +71,12 @@ export const StockList = () => {
       <tbody>
         {stock && stock.map((stockData) => {
           return (
-            <tr className='table-row' key={stockData.symbol}>
+            <tr 
+              className='table-row' 
+              key={stockData.symbol}
+              onClick={() => handleStockSelect(stockData.symbol)}
+              style={{cursor: "pointer"}}
+            >
               <th scope="row">{stockData.symbol}</th>
               <td>{stockData.data.c}</td>
               <td className={`text-${changeColor(stockData.data.d)}`}>
